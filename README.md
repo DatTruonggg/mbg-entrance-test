@@ -31,70 +31,10 @@ make setup
 > conda activate crypto_detective
 > ```
 
----
-
-## **3. Setup Qdrant Vector Database (via Docker)** 🛢️
-1️⃣ Ensure **Docker** is installed on your system.  
-2️⃣ Run the following command to start Qdrant:
-
-```sh
-docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
-```
-This will:
-- Pull the latest **Qdrant container** if not already available.
-- Run Qdrant on **port 6333** for vector storage and retrieval.
 
 ---
 
-## **4. Load Data into Qdrant** 📥
-Once Qdrant is running, load case files into the **vector database**:
-
-```sh
-make load_data
-```
-
-After successful execution, you can inspect stored vectors using the **Qdrant UI**.
-
-![qdrant_ui](/assets/qdrant_ui.png)
-
----
-
-## **5. Run FastAPI Backend** 🚀
-To start the **FastAPI server**, run:
-
-```sh
-make fastapi
-```
-This launches the API service, which handles **query retrieval, reranking, and LLM-based report generation**.
-
-You can access the FastAPI documentation at:
-
-📌 **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)  
-
-📌 **Redoc UI**: [http://localhost:8000/redoc](http://localhost:8000/redoc)  
-
-![fastapi](/assets/fastapi.png)
-
----
-
-## **6. Run Gradio UI** 🎨
-To start the **Gradio web interface**, run:
-
-```sh
-make gradio_ui
-```
-
-This will launch a **web-based investigation tool**, where users can:
-- **Enter queries**
-- **View retrieved evidence**
-- **See confidence scores**
-- **Access the generated investigation report**
-
-![gradio-ui](/assets/gradio-ui.png)
-
----
-
-## **7. Environment Variables Setup** 🔐
+## **3. Environment Variables Setup** 🔐
 Ensure the following environment variables are set:
 
 ```sh
@@ -134,6 +74,67 @@ bucket: "s3://xxxxxxxxxxxx"
 ```
 
 You can also store these in a `config_example.yaml` file.
+
+---
+
+## **4. Setup Qdrant Vector Database (via Docker)** 🛢️
+1️⃣ Ensure **Docker** is installed on your system.  
+2️⃣ Run the following command to start Qdrant:
+
+```sh
+docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
+```
+This will:
+- Pull the latest **Qdrant container** if not already available.
+- Run Qdrant on **port 6333** for vector storage and retrieval.
+
+---
+
+## **5. Load Data into Qdrant** 📥
+Once Qdrant is running, load case files into the **vector database**:
+
+```sh
+make load_data
+```
+
+After successful execution, you can inspect stored vectors using the **Qdrant UI**.
+
+![qdrant_ui](/assets/qdrant_ui.png)
+
+---
+
+## **6. Run FastAPI Backend** 🚀
+To start the **FastAPI server**, run:
+
+```sh
+make fastapi
+```
+This launches the API service, which handles **query retrieval, reranking, and LLM-based report generation**.
+
+You can access the FastAPI documentation at:
+
+📌 **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)  
+
+📌 **Redoc UI**: [http://localhost:8000/redoc](http://localhost:8000/redoc)  
+
+![fastapi](/assets/fastapi.png)
+
+---
+
+## **7. Run Gradio UI** 🎨
+To start the **Gradio web interface**, run:
+
+```sh
+make gradio_ui
+```
+
+This will launch a **web-based investigation tool**, where users can:
+- **Enter queries**
+- **View retrieved evidence**
+- **See confidence scores**
+- **Access the generated investigation report**
+
+![gradio-ui](/assets/gradio-ui.png)
 
 ---
 
