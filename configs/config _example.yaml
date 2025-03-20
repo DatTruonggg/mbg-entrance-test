@@ -1,0 +1,33 @@
+open_api_key: "xxxxxxxxxxx"
+embedding_model: "text-embedding-ada-002"
+gpt_model: "gpt-4o"
+tokenizer: "cl100k_base"
+
+chunk_size: 512
+chunk_overlap: 50
+
+top_k: 10
+top_rerank: 10
+top_k_retrieval: 10  
+
+strategy: "multi-step"
+data_dir: "./data/"
+
+rerank_weight_vector: 0.45  
+rerank_weight_llm: 0.55 
+filter_enabled: true  
+
+logging_file: ./logs/logging_file.log
+
+
+qdrant_host: "localhost"  
+qdrant_port: 6333  
+qdrant_collection: "crypto_case_vectors" 
+embedding_dim: 1536
+
+
+
+aws_access_key_id: "xxxxxxxxx"
+aws_secret_access_key: "xxxxxxxxxxxx"
+region: "ap-southeast-1"
+bucket: "s3://xxxxxxxxxxxx"
