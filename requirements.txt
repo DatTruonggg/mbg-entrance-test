@@ -1,0 +1,10 @@
+fastapi
+sentence-transformers
+openai
+loguru
+tiktoken
+qdrant-client
+uvicorn
+boto3
+gradio
+requests
