@@ -58,16 +58,20 @@ The system processes case files, retrieves relevant evidence, ranks results base
 
 ## 3. Timeline
 
-| Timestamp        | Event Description                             |
-| ---------------- | --------------------------------------------- |
-| 2025-03-19 09:00 | Project initialization and planning           |
-| 2025-03-19 09:30 | Qdrant container running via Docker           |
-| 2025-03-19 10:00 | Embedding pipeline created, chunking added    |
-| 2025-03-19 10:40 | Retrieval module + multi-step search complete |
-| 2025-03-19 11:20 | LLM-based reranker + scoring integrated       |
-| 2025-03-19 12:00 | Prompt-based report generation added          |
-| 2025-03-19 12:20 | S3 report upload + Gradio UI integrated       |
-| 2025-03-19 13:00 | Final testing, logs, and README cleanup       |
+| Timestamp        | Event Description                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| 2025-03-19 09:00 | Project initialization and planning                                                     |
+| 2025-03-19 09:30 | Qdrant container running via Docker                                                     |
+| 2025-03-19 10:00 | Embedding pipeline created, chunking added                                              |
+| 2025-03-19 10:40 | Retrieval module + multi-step search complete                                           |
+| 2025-03-19 11:20 | LLM-based reranker + scoring integrated                                                 |
+| 2025-03-19 12:00 | Prompt-based report generation added                                                    |
+| 2025-03-19 12:20 | **Encountered Qdrant issue: vector search latency spiked unexpectedly, causing delays** |
+| 2025-03-19 12:50 | Debugged and fixed Qdrant indexing issue, reloaded embeddings                           |
+| 2025-03-19 13:10 | **Faced AWS S3 upload failures due to authentication misconfiguration**                 |
+| 2025-03-19 13:30 | Fixed S3 access issue, re-attempted uploads successfully                                |
+| 2025-03-19 13:40 | Final testing, logs, and README cleanup                                                 |
+| 2025-03-19 13:50 | Submission completed (40 minutes delay due to debugging)                                |
 
 ---
 
@@ -89,6 +93,11 @@ The system processes case files, retrieves relevant evidence, ranks results base
 
 Multiple issues were encountered during testing and pipeline validation:
 
+- **Qdrant indexing delay:** At around 12:20 PM, Qdrant retrieval latency increased unexpectedly, making searches take up to **10x longer** than normal.
+- **Vector duplication issue:** After reloading embeddings, we found duplicated vectors affecting retrieval accuracy.
+- **Bug in text processing pipeline:** Some queries generated in query expansion were malformed, causing JSON parsing errors.
+- **Embedding inconsistencies:** Certain documents were chunked incorrectly, leading to duplicated or missing embeddings in Qdrant.
+- **Retry mechanism needed debugging:** When handling multiple queries, the system had issues with request timeouts.
 - Vector retrieval returned misleading results for abstract queries
 - LLM reranker produced non-numeric outputs without fallback
 - Truncated GPT responses due to token limits
@@ -98,9 +107,20 @@ Multiple issues were encountered during testing and pipeline validation:
 
 ## 6. Resolution
 
+- **Qdrant latency fix:** Rebuilt the Qdrant collection, re-indexed vectors, and optimized search parameters.
+
+- **Vector duplication fix:** Added deduplication logic in the embedding pipeline to avoid redundant storage.
+
+- **S3 storage fix:** Corrected IAM permissions, updated authentication credentials, and tested uploads successfully.
+
+- **Retry mechanism:** Implemented automatic retry for failed S3 uploads to handle transient errors.
+
 - Improved retrieval precision by switching to **multi-step** query expansion using GPT-generated sub-queries
+
 - Introduced normalization and fallback in reranker for invalid LLM scores
+
 - Increased token limit in report generator (max\_tokens: 2000)
+
 - Added logging and de-duplication to `Embedding.process()`
 
 ---
@@ -125,6 +145,14 @@ Multiple issues were encountered during testing and pipeline validation:
 ---
 
 ## 9. Learnings
+
+- **Unexpected infrastructure failures can significantly impact deadlines.** The Qdrant indexing issue and S3 misconfiguration caused an **overall delay of 40 minutes**.
+
+- **Always validate cloud storage configurations early.** The IAM policy issue could have been avoided with pre-deployment tests.
+
+- **Real-time monitoring is essential.** Adding **latency tracking and logging dashboards** for vector retrieval would help detect performance degradation faster.
+
+- **Backup & retry mechanisms are critical.** Implementing retries for failed S3 uploads helped ensure system reliability.
 
 - One key limitation encountered was **time management under the 3.5-hour constraint**. The orchestration of tasks (retrieval tuning, reranking prompt design, UI wiring, and S3 integration) led to some rushed decisions near the final hour. Better planning or mock runs beforehand could have led to smoother submission.
 
@@ -187,7 +215,7 @@ I would like to sincerely thank **Mighty Bear Games** for designing this thought
 
 I truly enjoyed working on this project and exploring how AI can be used to assist with real-world crypto investigations. I hope to have the chance to collaborate with your talented team and contribute to future innovations at Mighty Bear Games.
 
-📝 **Author**: Truong Minh Dat\
-🗓️ **Date**: 2025-03-20\
+📝 **Author**: [Your Name]\
+🗓️ **Date**: 2025-03-21\
 📁 **Project**: Crypto Detective – AI RAG for Cybercrime Investigations
 
