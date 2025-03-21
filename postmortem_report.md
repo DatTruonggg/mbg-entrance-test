@@ -2,18 +2,17 @@
 
 ## Table of Contents
 
-1. Overview
-2. Configuration Overview
-3. Timeline
-4. Metrics
-5. Detection
-6. Resolution
-7. Impact
-8. Root Cause Analysis
-9. Learnings
-10. Actions
-11. Conclusion
-12. Acknowledgement
+1. [Overview](#1-overview)
+2. [Configuration Overview](#2-configuration-overview)
+3. [Timeline](#3-timeline)
+4. [Metrics](#4-metrics)
+5. [Challenges & Solutions](#5-challenges--solutions)
+6. [Impact](#6-impact)
+7. [Root Cause Analysis](#7-root-cause-analysis)
+8. [Learnings](#8-learnings)
+9. [Actions](#9-actions)
+10. [Conclusion](#10-conclusion)
+11. [Acknowledgement](#11-acknowledgement)
 
 ## 1. Overview
 
@@ -106,22 +105,20 @@ The system processes case files, retrieves relevant evidence, ranks results base
 
 ---
 
-## 5. Detection
+## 5. Challenges & Solutions
 
-Multiple issues were encountered during testing and pipeline validation:
+- Challenges:
 
-- **Qdrant indexing delay:** At around 12:20 PM, Qdrant retrieval latency increased unexpectedly, making searches take up to **10x longer** than normal.
-- **Vector duplication issue:** After reloading embeddings, we found duplicated vectors affecting retrieval accuracy.
+    - Qdrant retrieval latency due to unoptimized query filtering.
+    - Embedding duplication caused by a missing deduplication step in the pipeline.
+    - LLM failures due to unpredictable prompt output formats. 
+    - S3 upload failures due to authentication misconfiguration.
 
-- **AWS S3 upload failures**
-
-- Vector retrieval returned misleading results for abstract queries
-
-- LLM reranker produced non-numeric outputs without fallback
-
-- Truncated GPT responses due to token limits
-
-- Redundant embedding calls when re-running document load
+- Solutions:
+    - Optimized Qdrant queries by adding pre-filtering to reduce search space.
+    - Implemented deduplication logic before storing embeddings.
+    - Refined prompt engineering to force structured JSON responses. -
+    - Fixed AWS authentication policies and added retry mechanisms for uploads.
 
 ---
 
