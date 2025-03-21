@@ -35,6 +35,23 @@ The system processes case files, retrieves relevant evidence, ranks results base
 
 ## 2. Configuration Overview
 
+### Why Qdrant over FAISS and Elasticsearch?
+
+| Criteria                         | Qdrant ✅                     | FAISS 🟡                      | Elasticsearch 🔴             |
+|----------------------------------|-------------------------------|-------------------------------|------------------------------|
+| **Purpose-built for Vectors**    | ✅ Yes – Vector-first engine  | ✅ Yes – Library focused       | 🔴 No – Keyword-focused      |
+| **Persistent Storage**           | ✅ Built-in persistence       | 🔴 No – Requires integration   | ✅ Yes                       |
+| **Metadata Filtering Support**   | ✅ Native & powerful          | 🔴 Not supported               | ✅ Supported via JSON query  |
+| **Ease of Use & API**            | ✅ REST/gRPC ready            | 🔴 Requires wrapper            | ✅ RESTful API               |
+| **Scalability**                  | ✅ Horizontal & sharded       | 🔴 No native clustering        | ✅ Cluster-ready             |
+| **RAG Workflow Integration**     | ✅ Hybrid search optimized    | 🔴 Needs customization         | 🟡 Partial (dense_vector)    |
+| **Setup & Deployment**           | ✅ Docker, GCP ready          | 🟡 Manual setup needed         | 🟡 Requires config tuning    |
+| **Latency (1M+ vectors)**        | ✅ Low                        | ✅ Fast (in-memory)            | 🔴 Slower in vector mode     |
+| **Community & Documentation**    | ✅ Active & modern            | 🟡 Academic-focused            | ✅ Strong ecosystem          |
+
+**→ Verdict:** Qdrant was selected because it offers the right balance between **vector accuracy, production readiness, scalability, and seamless integration** with RAG pipelines. Unlike FAISS and Elasticsearch, it supports hybrid vector + metadata search out-of-the-box, which is essential for evidence filtering and multi-step retrieval.
+
+
 | Config Key                  | Value                    |
 | --------------------------- | ------------------------ |
 | `open_api_key`              | (hidden)                 |
@@ -95,12 +112,15 @@ Multiple issues were encountered during testing and pipeline validation:
 
 - **Qdrant indexing delay:** At around 12:20 PM, Qdrant retrieval latency increased unexpectedly, making searches take up to **10x longer** than normal.
 - **Vector duplication issue:** After reloading embeddings, we found duplicated vectors affecting retrieval accuracy.
-- **Bug in text processing pipeline:** Some queries generated in query expansion were malformed, causing JSON parsing errors.
-- **Embedding inconsistencies:** Certain documents were chunked incorrectly, leading to duplicated or missing embeddings in Qdrant.
-- **Retry mechanism needed debugging:** When handling multiple queries, the system had issues with request timeouts.
+
+- **AWS S3 upload failures**
+
 - Vector retrieval returned misleading results for abstract queries
+
 - LLM reranker produced non-numeric outputs without fallback
+
 - Truncated GPT responses due to token limits
+
 - Redundant embedding calls when re-running document load
 
 ---
@@ -111,9 +131,11 @@ Multiple issues were encountered during testing and pipeline validation:
 
 - **Vector duplication fix:** Added deduplication logic in the embedding pipeline to avoid redundant storage.
 
-- **S3 storage fix:** Corrected IAM permissions, updated authentication credentials, and tested uploads successfully.
+- **Bug in text processing pipeline:** Some queries generated in query expansion were malformed, causing JSON parsing errors.
 
-- **Retry mechanism:** Implemented automatic retry for failed S3 uploads to handle transient errors.
+- **Embedding inconsistencies:** Certain documents were chunked incorrectly, leading to duplicated or missing embeddings in Qdrant.
+
+- **Retry mechanism needed debugging:** When handling multiple queries, the system had issues with request timeouts.
 
 - Improved retrieval precision by switching to **multi-step** query expansion using GPT-generated sub-queries
 
@@ -169,7 +191,7 @@ Multiple issues were encountered during testing and pipeline validation:
 ---
 
 ## 10. Actions
-
+![alt text](/assets/image.png)
 ### ✔️ Corrective Actions
 
 - Refined prompts with clearer scoring criteria and JSON output formatting
@@ -215,7 +237,7 @@ I would like to sincerely thank **Mighty Bear Games** for designing this thought
 
 I truly enjoyed working on this project and exploring how AI can be used to assist with real-world crypto investigations. I hope to have the chance to collaborate with your talented team and contribute to future innovations at Mighty Bear Games.
 
-📝 **Author**: [Your Name]\
+📝 **Author**: Truong Minh Dat\
 🗓️ **Date**: 2025-03-21\
 📁 **Project**: Crypto Detective – AI RAG for Cybercrime Investigations
 
