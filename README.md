@@ -5,6 +5,7 @@ This project is a **Retrieval-Augmented Generation (RAG) system** designed for c
 ---
 
 ## **1. Architecture** 🏗️
+![alt text](/assets/architecture.png)
 ### **System Overview**
 🔹 **Data Storage**: Case files are stored in `.txt` format and embedded into a **Qdrant vector database**.  
 🔹 **Retrieval System**: Uses **text embeddings** (OpenAI) to find similar documents based on queries.  
